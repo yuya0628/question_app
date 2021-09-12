@@ -1,0 +1,35 @@
+<div class="card border-success mb-3" style="max-width: 18rem;">
+  <div class="card-header bg-transparent border-success"><%= @question.title %></div>
+  <div class="card-body text-success">
+    <p class="card-text"><%= @question.content %></p>
+    <p class="card-text"><small class="text-muted">投稿日時：<%= @question.created_at.strftime('%Y/%m/%d') %></small></p>
+  </div>
+  <div class="card-footer bg-transparent border-success">ユーザーネーム：<%= @question.user.name %></div>
+  <div class="card-footer bg-transparent border-success">
+   <% if @question.user == current_user %>
+    <%= link_to "削除", question_path(@question), method: :delete,data:{confirm: "本当に削除しますか？"} %>
+   <% end %>
+  </div>
+  <div class="card-footer bg-transparent border-success"></div>
+</div>
+
+
+<p>回答件数：<%= @question.answers.count %></p>
+<% @question.answers.each do |answer| %>
+  <%= answer.user.name %>
+  <%= answer.created_at.strftime('%Y/%m/%d') %><%= answer.content %>
+  <% if answer.user == current_user %>
+  <div>
+    <%= link_to "削除", question_answer_path(answer.question, answer), method: :delete %>  <%# 第一引数はqustionの:user_id 、第二引数はanswerの:id %>
+  </div>
+  <% end %>
+<% end %>
+</div>
+<div>
+<%= form_with(model:[@question, @answer], local: true) do |f| %> <%# @questionはquestion_idに値が入っている状態 、 @answerは空のインスタンスにユーザーが書き込んだcontentが入っている状態%>
+  <%= f.text_area :content, rows:'5',placeholder: "回答をここに" %>
+  <%= f.submit "送信する" %>
+<% end %>
+</div>
+
+<%= link_to '戻る', questions_path %>

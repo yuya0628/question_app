@@ -1,0 +1,73 @@
+<%= link_to '質問する', new_question_path,class:"btn btn-primary" %>
+
+
+<div class="row">
+ <div class="col"></div>
+  <div class="col-8">
+
+      <%= search_form_for @q,url:'/questions/searchs',class:"form-inline my-2 my-lg-0" do |f| %>
+        <%= f.label :title_or_content_cont,"質問検索" %>
+        <%= f.search_field :title_or_content_cont,class:"form-control mr-sm-2 ml-3",placeholder:"検索ワード" %>
+        <%= f.submit '検索',class:"btn btn-outline-success  my-2 my-sm-0" %>
+      <% end %>
+      <div class="mt-5">
+      <%= link_to '全て' ,questions_path ,class:"col-2 btn btn-outline-info" %>
+      <%= link_to '解決済' ,solved_questions_path,class:"col-2 btn btn-outline-info" %>
+      <%= link_to '未解決',unsolved_questions_path ,class:"col-2 btn btn-outline-info" %>
+      </div>
+
+  </div>
+  <div class="col"></div>
+ </div>
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>ユーザーネーム</th>
+      <th>タイトル</th>
+      <th>内容</th>
+      <th>状況</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+  <tbody>
+  　<% @questions.each do |question| %>
+    <tr>
+      <th>
+      <% if question.user.image.attached? %> 
+       <%= image_tag question.user.image,class:"rounded-circle",widt:"50", height:"50" %>
+      <% else %>
+       <%= image_tag "no_image.jpeg",class:"rounded-circle",widt:"50", height:"50" %>
+      <% end %>
+      </th>
+      <th>
+      <% if question.user.name? %>
+       <%= question.user.name %>
+      <% else %>
+       名無しさん
+      <% end %> 
+      </th>
+      <th><%= question.title %></th>
+      <th><%= question.content %></th>
+      <th><%= link_to "#{question.answers.count} 件の回答", question_path(question.id) %></th>
+      <th>
+        <% if question.is_solved == false && question.user == current_user %>    　　<%# is_solved==false かつ　その質問を投稿したユーザーだけが”解決済”にできる  %>
+          <button type="button" class="btn btn-danger"><%= link_to '未解決', controller: 'questions', action: 'make_solved', id: question %></button>
+        <% elsif question.is_solved == false %>
+          <button type="button" class="btn btn-danger">未解決</button>
+        <% else %> 
+          <button type="button" class="btn btn-success">解決済</button>
+        <% end %>
+      </th>
+      <th>
+        <% if question.user == current_user %>
+        <p><%= link_to "質問編集", edit_question_path(question.id) %></p>
+        <% end %>
+      </th>
+      <th><%= link_to "質問詳細", question_path(question.id) %></th>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

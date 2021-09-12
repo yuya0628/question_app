@@ -1,0 +1,68 @@
+<h1>ユーザーページ</h1>
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+   <% if @user.image.attached? %>
+        <%= image_tag @user.image,class:"rounded-circle",widt:"50", height:"50" %>
+   <% else %>
+        <%= image_tag "no_image.jpeg",class:"rounded-circle",widt:"50", height:"50" %>
+   <% end %>
+
+   <%= @user.name %>
+
+    <div class="card-link">
+      <% if @user == current_user %>
+       <%= link_to "ユーザー削除", user_path(@user), method: :delete,data:{confirm: "本当に削除しますか？"} %>
+      <% end %>
+    </div>
+    <div class="card-link">
+      <% if @user == current_user %>
+       <%= link_to "ユーザー編集", edit_user_path(@user), method: :get %>
+      <% end %>
+    </div>
+
+  </div>
+</div>
+
+<h2>
+  <% if @user.name? %>
+    <h1><%= @user.name %>さんの過去の質問一覧</h1>
+  <% else %>
+    <h1>名無しさんの過去の質問一覧</h1>
+  <% end %>
+</h2>
+<table class="table">
+ <thead>
+  <tr>
+   <th>タイトル</th>
+   <th>内容</th>
+   <th>状況</th>
+   <th colspan="3"></th>
+  </tr>
+ </thead>
+ <tbody>
+  <% @questions.each do |question| %>
+  <tr>
+   <td><%= question.title %></td>
+   <td><%= question.content %></td>
+   <td>
+    <% if question.is_solved == false && question.user == current_user %>    　　<%# is_solved==false かつ　その質問を投稿したユーザーだけが”解決済”にできる  %>
+      <button type="button" class="btn btn-danger"><%= link_to '未解決', controller: 'questions', action: 'make_solved', id: question %></button>
+    <% elsif question.is_solved == false %>
+      <button type="button" class="btn btn-danger">未解決</button>
+    <% else %>
+      <button type="button" class="btn btn-success">解決済</button>
+    <% end %>
+   </td>
+   <td>
+    <% if question.user == current_user %>
+     <%= link_to "質問編集", edit_question_path(question.id) %>
+    <% end %>
+   </td>
+   <td><%= link_to "質問詳細", question_path(question.id) %></td>
+
+  </tr>
+   <% end %>
+ </tbody>
+</table>
+
+<%= link_to '戻る', questions_path %>

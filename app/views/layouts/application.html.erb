@@ -5,11 +5,42 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
+  <ul class="navbar-nav ml-auto">
+   <% if current_user %>
+    <li class="nav-item"><%= link_to "質問一覧",questions_path,class:"nav-link" %></li>
+    <li class="nav-item"><%= link_to "ユーザー一覧",users_path,class:"nav-link" %></li>
+    <li class="nav-item"><%= link_to "ログアウト",logout_user_path(current_user),method: :delete,class:"nav-link" %></li>
+    <li class="nav-item">
+    <%= link_to user_path(current_user) do %>
+      <% if current_user.image.attached? %> 
+          <%= image_tag current_user.image,class:"rounded-circle",widt:"50", height:"50" %>
+      <% else %>
+          <%= image_tag "no_image.jpeg",class:"rounded-circle",widt:"50", height:"50" %>
+      <% end %>
+    <% end %>  
+    </li>
+    
+   <% else %>
+     <li class="nav-item"><%= link_to "ログイン",login_users_path,class:"nav-link" %></li>
+   <% end %>
+  </ul>
+    
+  <div class="container"> 
+   <% if flash.notice.present? %>
+    <div class="alert alert-success"><%= flash.notice %></div> 
+   <% end %> 
+
     <%= yield %>
+
   </body>
 </html>
