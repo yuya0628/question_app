@@ -24,7 +24,7 @@ class QuestionsController < ApplicationController
   end
 
   def index
-    @questions=Question.all
+    @questions=Question.page(params[:page]).per(5)
   end
 
   def show
