@@ -1,3 +1,5 @@
+<h1>管理者専用ページ</h1>
+
 <table class="table">
  <thead>
   <tr>
@@ -19,12 +21,12 @@
       </th>
       <th><%= user.name %></th>
       <th><%= link_to "詳細", user_path(user.id) %></th>
+
+      <th><%= link_to "ユーザー削除（管理者専用）", admins_user_path(user),method: :delete,data:{confirm:"本当に削除しますか？"}%></th>
+      
     </tr>
   <% end %>
  </tbody>
 </table>
 
-<%= link_to '戻る', questions_path %>
-
-
-
+<%#= link_to '戻る', admin_questions_path %>

@@ -1,25 +1,5 @@
+<h1>管理者専用ページ</h1>
 
- <%= link_to '質問する', new_question_path,class:"btn btn-primary" %>
-
-
-<div class="row">
- <div class="col"></div>
-  <div class="col-8">
-
-      <%= search_form_for @q,url:'/questions/searchs',class:"form-inline my-2 my-lg-0" do |f| %>
-        <%= f.label :title_or_content_cont,"質問検索" %>
-        <%= f.search_field :title_or_content_cont,class:"form-control mr-sm-2 ml-3",placeholder:"検索ワード" %>
-        <%= f.submit '検索',class:"btn btn-outline-success  my-2 my-sm-0" %>
-      <% end %>
-      <div class="mt-5">
-      <%= link_to '全て' ,questions_path ,class:"col-2 btn btn-outline-info" %>
-      <%= link_to '解決済' ,solved_questions_path,class:"col-2 btn btn-outline-info" %>
-      <%= link_to '未解決',unsolved_questions_path ,class:"col-2 btn btn-outline-info" %>
-      </div>
-
-  </div>
-  <div class="col"></div>
- </div>
 
 
 <table class="table">
@@ -62,16 +42,18 @@
           <button type="button" class="btn btn-success">解決済</button>
         <% end %>
       </td>
-      <td>
-        <% if question.user == current_user %>
-        <p><%= link_to "質問編集", edit_question_path(question.id) %></p>
-        <% end %>
-      </td>
       <td><%= link_to "質問詳細", question_path(question.id) %></td>
+      <td><%= link_to "質問削除（管理者専用）", admins_question_path(question),method: :delete,data:{confirm:"本当に削除しますか？"} %></td>
     </tr>
     <% end %>
   </tbody>
 </table>
 
-<%= paginate(@questions) %>
 
+<%if current_user.admin? %>
+ <%= link_to "ユーザー一覧（管理者専用）",admins_users_path %>
+<% end %> 
+
+<%if current_user.admin? %>
+ <%= link_to "ログアウト（管理者専用）",admins_logout_path,method: :delete %>
+<% end %> 
